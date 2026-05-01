@@ -13,7 +13,8 @@ spring:
   application:
     name: clinico
   datasource:
-    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_CONNECTION_VALUE}
+    datasource:
+    url: jdbc:oracle:thin:@(DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = ${DB_HOST})(PORT = ${DB_PORT})) (CONNECT_DATA = (SERVER = DEDICATED) (${DB_CONNECTION_TYPE} = ${DB_CONNECTION_VALUE})))
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
   servlet:
@@ -26,12 +27,24 @@ spring:
     serialization:
       fail-on-self-references: false
   
-
-
+app:
+  cors:
+    allowed-origins: ${ORIGINS_URL}
+  security:
+    jwt-secret: ${JWT_SECRET}
+    expiration: ${TOKEN_EXPIRATION}
 
 logging:
   level:
     root: ${LOG_LEVEL}
+    org:
+      springframework:
+        security:
+          config:
+            annotation:
+              authentication:
+                configuration:
+                  InitializeUserDetailsBeanManagerConfigurer: ERROR
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
     org.hibernate.engine.internal.StatisticalLoggingSessionEventListener: off
